@@ -1,0 +1,54 @@
+version: '3.3'
+
+services:
+  pweb-postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./Docker/init_db.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./Docker/init_data.sql:/docker-entrypoint-initdb.d/2-data.sql
+      - ./Docker/functions.sql:/docker-entrypoint-initdb.d/3-functions.sql
+      - db_data:/var/lib/postgresql/data
+    restart: always
+    environment:
+      POSTGRES_USER: proiectPWeb
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: FASHIONSTORE
+    networks:
+      - pweb-db
+      - backend
+
+  pweb-adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - pweb-db
+
+  pweb-backend:
+    build: backend
+    ports:
+      - 3001:3001
+    restart: always
+    environment:
+      PGUSER: proiectPWeb
+      PGPASSWORD: pass
+      PGHOST: pweb-postgres
+      PGPORT: 5432
+      PGDATABASE: FASHIONSTORE
+      JWT_SECRET_KEY: myawesomeultrasecretkey
+      JWT_ISSUER: "pw backend"
+      JWT_SUBJECT: web
+      JWT_AUDIENCE: "pw client"
+      NODE_ENV: development
+    networks:
+      - backend
+
+volumes:
+  db_data:
+
+networks:
+  backend:
+  pweb-db:

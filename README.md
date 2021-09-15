@@ -1,4 +1,4 @@
-Online fashion store - database PostgreSQL, backend NodeJS, frontend React (multipage application - not serverside rendering)
+Online fashion store - database PostgreSQL, backend NodeJS, frontend React (single page application)
 
 Personal project. It has 3 different interfaces, depending on the role of the user - ADMIN, SUPPORT and CUSTOMER.
 
